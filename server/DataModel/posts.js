@@ -2,12 +2,17 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const post = new Schema({
+    id: String,
     title: String,
     message: String,
+    avatar: String,
     creator: String,
-    tags: [String],
     file: String,
     likes:{
+        type: Number,
+        default: 0
+    },
+    loves:{
         type: Number,
         default: 0
     },

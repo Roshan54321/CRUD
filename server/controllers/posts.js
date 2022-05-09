@@ -9,9 +9,8 @@ const getPosts = async (req, res) => {
     }
 }
 
-const createPosts = async (req, res) => {
+const createPost = async (req, res) => {
     const newPost = new postModel(req.body)
-    
     try{
         await newPost.save()
         res.status(201).json(newPost)
@@ -20,4 +19,26 @@ const createPosts = async (req, res) => {
     }
 }
 
-module.exports = { getPosts, createPosts }
+const deletePost = async (req, res) => {
+    const id = req.params.id
+    console.log(id)
+    console.log(typeof id)
+    try{
+        await postModel.deleteOne({ id: id})
+        res.status(200).json()
+    } catch(err){
+        res.status(404).json({ message: err.message })
+    }
+}
+
+const updatePost = async (req, res) => {   
+    const updatedPost = new postModel(req.body)
+    try{
+        const post = await postModel.updateOne({ id: req.params.id }, updatedPost)
+        res.status(204).json(updatedPost)
+    } catch(err){
+        res.status(409).json({ message: err.message })
+    }
+}
+
+module.exports = { getPosts, createPost, updatePost, deletePost }
