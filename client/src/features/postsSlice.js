@@ -25,7 +25,7 @@ export const postsSlice = createSlice({
             })
             
             .addCase(api.getPosts.pending, (state, action) => {
-                state.status = "loading"  
+                return({...state, data: action.payload, status: "loading"})  
             })
             
             .addCase(api.getPosts.rejected, (state, action) => {
@@ -37,12 +37,12 @@ export const postsSlice = createSlice({
                 return({...state, data: [...state.data, action.payload], status: "success"})  
             })
             
-            .addCase(api.createPost.rejected, (state, action) => {
-                state.status = "failed"
+            .addCase(api.createPost.pending, (state, action) => {
+                state.status = "loading"
            })
 
             .addCase(api.deletePost.fulfilled, (state, action) => {
-                return {...state, data: state.data.filter(id => id !== action.payload.id) }
+                return {...state, data: state.data.filter(data => data.id !== action.payload.id) }
             })
             
             .addCase(api.deletePost.rejected, (state, action) => {

@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Post from './Post'
+import Loading from './Loading'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
-import { store } from '../../app/store'
-import { getPosts } from '../../api/postsapi'
 
 export default function Posts() {
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(getPosts())
-  }, [])
-  const posts = useSelector(state => state.posts.data, shallowEqual)
+  const { data : posts, status : state } = useSelector(state => state.posts, shallowEqual)
   return (
     <>
         {posts? posts.map(post => (
@@ -17,6 +12,20 @@ export default function Posts() {
           <Post post = {post}/>
         </React.Fragment>
         )):null}
+
+        {posts && state==="loading"? 
+        <React.Fragment  key={Math.random(Date.now())}>
+          <Loading/>
+        </React.Fragment>
+        :null}
+
+        {!posts && state==="loading"?
+        <React.Fragment  key={Math.random(Date.now())}>
+          <Loading/>
+          <Loading/>
+          <Loading/>
+        </React.Fragment>
+        :null}
     </>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Avatar } from '@material-ui/core'
 import like from '../../assets/like.png'
 import love from '../../assets/love.png'
@@ -10,6 +10,8 @@ import { deletePost } from '../../api/postsapi'
 export default function Post(props){
     const [post, setPost] = useState(props.post)
     const dispatch = useDispatch()
+    useEffect(() => {
+    })
     const likeButton = () => {
         const likeButtonElement = document.getElementById('likeButtonElement')
         if(!likeButtonElement.disabled)
@@ -88,8 +90,15 @@ export default function Post(props){
                 <Form action = 'postComment'>
                     <InputGroup>
                         <InputGroup.Text>Comment</InputGroup.Text>
-                        <FormControl as="textarea" aria-label="Comment" required/>
-                        <Button type='submit'>Send</Button>
+                        <FormControl id="comment" as="textarea" aria-label="Comment" onChange={()=>{
+                            if(document.getElementById('comment').value)
+                            {
+                                document.getElementById('post').disabled = false
+                            }else{
+                                document.getElementById('post').disabled = true
+                            }}
+                        }/>
+                        <Button type='submit' id="post" disabled>Send</Button>
                     </InputGroup>
                 </Form>
                 <div style = {{ margin: '0.5rem' }}>

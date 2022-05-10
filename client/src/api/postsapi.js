@@ -28,9 +28,8 @@ export const updatePost = async (post) => {
     
 export const deletePost = createAsyncThunk('deletePost', async (post, thunkAPI) => {
     try {
-        console.log(url + `/${post.id}`)
         await axios.delete(url+ "/"+ post.id)
-
+        return post
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
         return thunkAPI.rejectWithValue(message);
