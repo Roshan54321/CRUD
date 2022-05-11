@@ -26,22 +26,43 @@ const loginUser = async (req, res) => {
     const getUser = await usersModel.findOne({username : user.username})
     try{
         if(getUser){
-            await bcrypt.compare(user.password, getUser.password, (err, result) => {
+            bcrypt.compare(user.password, getUser.password, (err, result) => {
                 if(result){
                     const token = jwt.sign({id: getUser.id}, process.env.jwtSecret, {
                         expiresIn: 300
                     })
-                    res.status(200).json({status:"success", message: "Login Successful", token: token, result: {username: getUser.username, avatar: getUser.avatar}})
+                    res.status(200).json({auth:true, message: "Login Successful", token: token, result: {username: getUser.username, avatar: getUser.avatar}})
                 }else{
-                    res.status(200).json({status:"failed", message: "Wrong Username or Password"})
+                    res.status(200).json({auth:false, message: "Invalid Username or Password"})
                 }
             })
         }else{
-            res.status(200).json({status:"failed", message: "Wrong Username or Password"})
+            res.status(200).json({auth:false, message: "Invalid Username or Password"})
         }
     }catch(e){
-        res.status(400).json({status:"failed", message: "Cannot authorize"})
+        res.status(400).json({auth:false, message: "Cannot authorize due to some error"})
     }
 }
 
-module.exports = { addUser, loginUser }
+const authUser = (req, res) => {
+    const token = req.headers["x-access-token"]
+    try{
+        if(token){
+            jwt.verify(token, process.env.jwtSecret, (e, decoded) => {
+                if(e){
+                    res.json({auth:false, message:"You failed to authenticate"})
+                }else{
+                    const result = {username: user.username, avatar: user.avatar} 
+                    res.json({auth:true, result})
+                }
+            })
+        }else{
+            res.json({auth:false, message:"You failed to authenticate"})
+        }
+    }catch(e){
+        const user = usersModel.findOne({id: decoded.id})
+        res.json({auth:false, message:"Authentication could not be done successfully"})
+    }
+}
+
+module.exports = { addUser, loginUser, authUser }

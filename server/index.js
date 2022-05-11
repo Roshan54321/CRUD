@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const postRoutes = require('./routes/posts')
 const registerRoutes = require('./routes/register')
 const loginRoutes = require('./routes/login')
+const authRoutes = require('./routes/auth')
 
 const app = express()
 const port = process.env.PORT || 8000
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use('/posts', postRoutes)
 app.use('/register', registerRoutes)
 app.use('/login', loginRoutes)
+app.use('/auth', authRoutes)
 
 mongoose.connect( connectionString, {
     useNewUrlParser: true,
