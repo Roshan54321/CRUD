@@ -52,8 +52,12 @@ export default function Post(props){
           Hide Post
         </Tooltip>
     )
-    const creator = post.creator.toUpperCase().slice(0,1)+ post.creator.slice(1)
-    const creatorAvatar = creator.slice(0, 1)
+    let creatorAvatar = ""
+    let creator = ""
+    if(post.creator){
+        creator = post.creator.toUpperCase().slice(0,1)+ post.creator.slice(1)
+        creatorAvatar = creator.slice(0, 1)
+    }
   return (
     <div>
         <Card style={{ margin: '1rem', width: '30rem' }}>

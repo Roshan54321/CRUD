@@ -20,10 +20,8 @@ export default function App() {
     if(info){
       if(!info.auth){
         navigate('/login')
-      }else{
-        dispatch(getPosts())
-      }
-    }
+      }}
+    dispatch(getPosts())
   }, [dispatch, navigate])
   return (
     <>

@@ -32,7 +32,6 @@ export default function Post(){
         reader.onload = () => resolve(reader.result)
         reader.onerror = e => reject(e)
     })
-
     useEffect(() => {
         const postSubmit = document.getElementById('postSubmit')
         const createPostForm = document.getElementById('createPost')
@@ -57,10 +56,11 @@ export default function Post(){
                 file: postImage,
                 id: Date.now() + '' + Math.random(),
             }
-            createPostForm.reset()
             dispatch(createPost(post.current))
+            console.log("...")
+            createPostForm.reset()
         })
-    })
+    }, [dispatch])
   return (
     <div>
         <form id = "createPost">
