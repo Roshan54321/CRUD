@@ -1,9 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
-import * as api from '../api/postsapi'
+import * as postsapi from '../api/postsapi'
+import * as accountapi from '../api/accountapi'
 
 const initialState = {
     data : [],
-    status : "",
+    auth : false,
+    user : {username:"", avatar:"", message:""},
+    status : ""
 }
 
 export const postsSlice = createSlice({
@@ -17,39 +20,66 @@ export const postsSlice = createSlice({
                 console.error(e)
             }       
         },
+        changeAuth: async (state, action) => {
+            try{
+                state.auth = action.payload.auth   
+            }catch(e){
+                console.error(e)
+            }
+        },
+        loadPersistedState: (state, action) => {
+            try{
+                const loaded = JSON.parse(localStorage.getItem("state"))   
+                if(loaded)
+                    return {...state, auth:loaded.auth, user:{...state.user, username:loaded.username, avatar:loaded.avatar}} 
+            }catch(e){
+                console.error(e)
+            }
+        }
     },
     extraReducers: (builder) => {
         builder
-           .addCase(api.getPosts.fulfilled, (state, action) => {
+           .addCase(postsapi.getPosts.fulfilled, (state, action) => {
+                localStorage.setItem("state", JSON.stringify({...state, data: action.payload, status: "success"}))
               return({...state, data: action.payload, status: "success"})  
             })
             
-            .addCase(api.getPosts.pending, (state, action) => {
+            .addCase(postsapi.getPosts.pending, (state, action) => {
                 return({...state, data: action.payload, status: "loading"})  
             })
             
-            .addCase(api.getPosts.rejected, (state, action) => {
+            .addCase(postsapi.getPosts.rejected, (state, action) => {
                 state.data = null;
                 state.status = "failed"
             })
             
-            .addCase(api.createPost.fulfilled, (state, action) => {
+            .addCase(postsapi.createPost.fulfilled, (state, action) => {
                 return({...state, data: [...state.data, action.payload], status: "success"})  
             })
             
-            .addCase(api.createPost.pending, (state, action) => {
+            .addCase(postsapi.createPost.pending, (state, action) => {
                 state.status = "loading"
            })
 
-            .addCase(api.deletePost.fulfilled, (state, action) => {
+            .addCase(postsapi.deletePost.fulfilled, (state, action) => {
                 return {...state, data: state.data.filter(data => data.id !== action.payload.id) }
             })
             
-            .addCase(api.deletePost.rejected, (state, action) => {
+            .addCase(postsapi.deletePost.rejected, (state, action) => {
                 state.status = "failed"
+           })
+                
+            .addCase(accountapi.authUser.fulfilled, (state, action) => {
+                if(action.payload.auth){
+                    return {...state, auth: action.payload.auth,
+                        user: {...state.user, username:action.payload.result.username, avatar:action.payload.result.avatar}}
+                }else{
+                    return {...state, auth: action.payload.auth,
+                        user: {...state.user, message:action.payload.message}}
+                }
            })
      }
 })
 
-export const { createPost } = postsSlice.actions
+export const { createPost, changeAuth, loadPersistedState } = postsSlice.actions
 export default postsSlice.reducer

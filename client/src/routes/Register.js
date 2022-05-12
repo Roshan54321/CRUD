@@ -1,14 +1,37 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
-import { registerUser } from '../api/accountapi'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { registerUser, authUser } from '../api/accountapi'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 export default function App() {
+    const [warning, setWarning] = useState("")
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    useEffect(() => {
+        dispatch(authUser())
+    }, [dispatch])
+    
+    const info = useSelector(state => state.posts, shallowEqual)
+    if(info){
+        if(info.auth){
+            navigate('/')
+        }
+    }
+
     const Register = (e) => {
         e.preventDefault()
-        const user = { username : document.getElementById('Username').value, password : document.getElementById('Password').value,  avatar : "" }
-        registerUser(user)
+        const user = { username: document.getElementById('Username').value, password: document.getElementById('Password').value, avatar: "" }
+        const data = registerUser(user)
+        data.then((res) => {
+            if(res.status === "success"){
+                navigate('/')
+            }
+            setWarning(res.message)
+        })
         document.getElementById('register').reset()
+        document.getElementById('registerButton').disabled = true
     }
 
     return (
@@ -36,12 +59,15 @@ export default function App() {
                             document.getElementById('registerButton').disabled = true
 
                     }}/>
+                    <Form.Text className="text-danger fs-6" id="warning">
+                        {warning}
+                    </Form.Text>
                 </Form.Group>
                 <Button variant="primary" type="submit" id="registerButton" disabled>
                     Register
                 </Button>
                 </Form>
-                <div style={{marginTop:"1rem", display:"flex", alignItems:"center", gap:"1rem"}}>
+                <div style={{marginTop:"1rem", display:"flex", alignItems:"center", gap:"0.5rem"}}>
                     <div>Already have an account?</div>
                     <Link to="/login"><Button variant="primary" id="registerButton" >
                         Login

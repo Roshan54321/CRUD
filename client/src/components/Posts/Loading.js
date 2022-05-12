@@ -1,11 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Avatar } from '@material-ui/core'
-import like from '../../assets/like.png'
-import love from '../../assets/love.png'
+import React from 'react'
 import { Card, CloseButton } from 'react-bootstrap'
-import { IconButton } from '@material-ui/core'
-import { useDispatch } from 'react-redux'
-import { deletePost } from '../../api/postsapi'
 
 export default function Loading() {
     return (

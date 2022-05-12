@@ -1,63 +1,87 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { loginUser } from '../api/accountapi'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import { loginUser, authUser } from '../api/accountapi'
+import { changeAuth } from '../features/postsSlice'
+import { store } from '../app/store'
+import { loadPersistedState } from '../features/postsSlice'
 
 export default function App() {
+    const [warning, setWarning] = useState("")
+    const dispatch = useDispatch()
     const navigate = useNavigate()
+    useEffect(() => {
+        dispatch(loadPersistedState())
+        dispatch(authUser())
+    }, [dispatch])
+    const info = useSelector(state => state.posts, shallowEqual)
+    if(info){
+        if(info.auth){
+            navigate('/')
+        }
+    }
     const Login = (e) => {
         e.preventDefault()
-        const user = { username : document.getElementById('Username').value, password : document.getElementById('Password').value,  avatar : "" }
-        const res = loginUser(user)
-        res.then((res) => {
-            if(res.status === "success"){
+        const user = { username: document.getElementById('Username').value, password: document.getElementById('Password').value, avatar: "" }
+        const data = loginUser(user)
+        data.then((res) => {
+            console.log(res)
+            if(res.auth){
+                localStorage.setItem("state", JSON.stringify({...store.getState(), auth: true, username: res.result.username, avatar: res.result.avatar}))
                 navigate('/')
             }
+            setWarning(res.message)
+            dispatch(changeAuth({auth: res.auth}))
         })
         document.getElementById('login').reset()
+        document.getElementById('loginButton').disabled = true
     }
 
     return (
         <>
-        <h1 style={{textAlign:"center", marginTop:"1rem"}}>Communicate</h1>
-        <div style={{width:"60%", margin: "auto", marginTop:"1rem", border:"2px solid purple", padding:"15px", borderRadius:"5px", backgroundColor:"pink"}}>
-            <Form id="login" onSubmit={(e)=>Login(e)}>
-                <Form.Group className="mb-3" controlId="Username">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control type="username" placeholder="Username" required/>
-                    <Form.Text className="text-muted">
-                        We'll never share your username with anyone else.
-                    </Form.Text>
-                </Form.Group>
+            <h1 style={{ textAlign: "center", marginTop: "1rem" }}>Communicate</h1>
+            <div style={{ width: "60%", margin: "auto", marginTop: "1rem", border: "2px solid purple", padding: "15px", borderRadius: "5px", backgroundColor: "pink" }}>
+                <Form id="login" onSubmit={(e) => Login(e)}>
+                    <Form.Group className="mb-3" controlId="Username">
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control type="username" placeholder="Username" required />
+                        <Form.Text className="text-muted">
+                            We'll never share your username with anyone else.
+                        </Form.Text>
+                    </Form.Group>
 
-                <Form.Group className="mb-3" controlId="Password">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" required/>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="I am Ready" onChange={() => {
-                        if(document.getElementById('formBasicCheckbox').checked)
-                            document.getElementById('loginButton').disabled = false
-                        else
-                            document.getElementById('loginButton').disabled = true
+                    <Form.Group className="mb-3" controlId="Password">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control type="password" placeholder="Password" required />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                        <Form.Check type="checkbox" label="I am Ready" onChange={() => {
+                            if (document.getElementById('formBasicCheckbox').checked)
+                                document.getElementById('loginButton').disabled = false
+                            else
+                                document.getElementById('loginButton').disabled = true
 
-                    }}/>
-                </Form.Group>
-                <Button variant="primary" type="submit" id="loginButton" onClick={() => {
-                    
-                }} disabled>
-                    Login
-                </Button>
-            </Form>
-                <div style={{marginTop:"1rem", display:"flex", alignItems:"center", gap:"1rem"}}>
+                        }} />
+                        <Form.Text className="text-danger fs-6" id="warning">
+                            {warning}
+                        </Form.Text>
+                    </Form.Group>
+                    <Button variant="primary" type="submit" id="loginButton" onClick={() => {
+
+                    }} disabled>
+                        Login
+                    </Button>
+                </Form>
+                <div style={{ marginTop: "1rem", display: "flex", alignItems: "center", gap: "1rem" }}>
                     <div>Create an account</div>
                     <Link to="/register"><Button variant="primary" id="registerButton" >
-                            Register
-                        </Button>
+                        Register
+                    </Button>
                     </Link>
                 </div>
-        </div>
+            </div>
         </>
     )
 }
