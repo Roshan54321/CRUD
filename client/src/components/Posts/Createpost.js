@@ -1,26 +1,27 @@
 import React, { useEffect, useRef } from 'react'
 import { Avatar } from '@material-ui/core'
-import creatorImage from '../../assets/logo192.png'
 import { Navbar, Container, Card, InputGroup, FormControl, Form, Button } from 'react-bootstrap'
-// import fileBase from 'react-file-base64'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { store } from '../../app/store'
 import { createPost } from '../../api/postsapi'
 
 export default function Post(){
-    const dispatch = useDispatch(store.dispatch)
-    let creator = "roshan"
+    const dispatch = useDispatch()
+    const info = useSelector(state => state.posts, shallowEqual)
+    let creator = ""
     const post = useRef({
         id: "",
         title: "",
         avatar: "",
         file: "", 
         message: "",
-        creator: creator,
+        creator: "",
         likes: 0,
         loves: 0,
         createdAt: new Date().toISOString().slice(0,10)
     })
+
+    post.current = {...post.current, creator: info.username, avatar: info.avatar}
 
     creator = creator.charAt(0).toUpperCase() + creator.slice(1)
     const creatorAvatar = creator.slice(0, 1)
@@ -55,7 +56,6 @@ export default function Post(){
                 message: messageElement.value, 
                 file: postImage,
                 id: Date.now() + '' + Math.random(),
-                avatar: creatorImage
             }
             createPostForm.reset()
             dispatch(createPost(post.current))
@@ -66,7 +66,7 @@ export default function Post(){
         <form id = "createPost">
             <Card className="" style={{ margin: '1rem', width: '30rem', marginBottom: '2rem', border: "1px solid green"}}>
                 <Card.Header style = {{ display: 'flex', alignItems : 'center' }}>
-                    <Avatar alt='' src = {creatorImage}>{creatorAvatar}</Avatar>
+                    <Avatar alt='' src = {post.current.avatar}>{creatorAvatar}</Avatar>
                     <span style = {{marginLeft: '0.5rem'}}>You</span>
                 </Card.Header>
                 <Navbar variant="light" expand="lg">

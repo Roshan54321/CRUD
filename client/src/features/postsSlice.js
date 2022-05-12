@@ -31,7 +31,7 @@ export const postsSlice = createSlice({
             try{
                 const loaded = JSON.parse(localStorage.getItem("state"))   
                 if(loaded)
-                    return {...state, auth:loaded.auth, user:{...state.user, username:loaded.username, avatar:loaded.avatar}} 
+                    return loaded 
             }catch(e){
                 console.error(e)
             }
@@ -41,7 +41,7 @@ export const postsSlice = createSlice({
         builder
            .addCase(postsapi.getPosts.fulfilled, (state, action) => {
                 localStorage.setItem("state", JSON.stringify({...state, data: action.payload, status: "success"}))
-              return({...state, data: action.payload, status: "success"})  
+                return({...state, data: action.payload, status: "success"})  
             })
             
             .addCase(postsapi.getPosts.pending, (state, action) => {
@@ -54,6 +54,7 @@ export const postsSlice = createSlice({
             })
             
             .addCase(postsapi.createPost.fulfilled, (state, action) => {
+                localStorage.setItem("state", JSON.stringify({...state, data:[...state.data, action.payload], status: "success"}))
                 return({...state, data: [...state.data, action.payload], status: "success"})  
             })
             
@@ -71,10 +72,12 @@ export const postsSlice = createSlice({
                 
             .addCase(accountapi.authUser.fulfilled, (state, action) => {
                 if(action.payload.auth){
-                    return {...state, auth: action.payload.auth,
+                    return {...state, auth: true,
                         user: {...state.user, username:action.payload.result.username, avatar:action.payload.result.avatar}}
                 }else{
-                    return {...state, auth: action.payload.auth,
+                    localStorage.removeItem("state")
+                    localStorage.removeItem("token")
+                    return {...state, auth: false,
                         user: {...state.user, message:action.payload.message}}
                 }
            })

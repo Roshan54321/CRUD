@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 import App from './routes/App'
 import Register from './routes/Register'
 import Login from './routes/Login'
+import Invalidpage from './routes/Invalidpage'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import { Provider } from 'react-redux'
@@ -18,6 +19,7 @@ root.render(
                     <Route path='/' element={<App/>}></Route>
                     <Route path='/register' element={<Register/>}></Route>
                     <Route path='/login' element={<Login/>}></Route>
+                    <Route path='*' element={<Invalidpage/>}></Route>
                 </Routes>
             </Router>
         </Provider>

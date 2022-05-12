@@ -6,7 +6,7 @@ export const authUser = createAsyncThunk('authUser', async (thunkAPI) => {
     try {
         const token = localStorage.getItem("token")
         const { data } = await axios.get(url+"/auth", {
-            Headers: {
+            headers: {
                 "x-access-token": token
             }
         })

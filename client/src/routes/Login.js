@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { loginUser, authUser } from '../api/accountapi'
 import { changeAuth } from '../features/postsSlice'
 import { store } from '../app/store'
@@ -15,13 +15,13 @@ export default function App() {
     useEffect(() => {
         dispatch(loadPersistedState())
         dispatch(authUser())
-    }, [dispatch])
-    const info = useSelector(state => state.posts, shallowEqual)
-    if(info){
-        if(info.auth){
-            navigate('/')
+        const info = store.getState().posts
+        if(info){
+            if(info.auth){
+                navigate('/')
+            }
         }
-    }
+    }, [dispatch, navigate])
     const Login = (e) => {
         e.preventDefault()
         const user = { username: document.getElementById('Username').value, password: document.getElementById('Password').value, avatar: "" }
@@ -30,10 +30,11 @@ export default function App() {
             console.log(res)
             if(res.auth){
                 localStorage.setItem("state", JSON.stringify({...store.getState(), auth: true, username: res.result.username, avatar: res.result.avatar}))
+                localStorage.setItem("token", res.token)
+                dispatch(changeAuth({auth: true}))
                 navigate('/')
             }
             setWarning(res.message)
-            dispatch(changeAuth({auth: res.auth}))
         })
         document.getElementById('login').reset()
         document.getElementById('loginButton').disabled = true

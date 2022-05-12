@@ -50,8 +50,10 @@ const authUser = (req, res) => {
         if(token){
             jwt.verify(token, process.env.jwtSecret, (e, decoded) => {
                 if(e){
-                    res.json({auth:false, message:"You failed to authenticate"})
+                    res.json({auth:false, message:"Token is expired"})
                 }else{
+                    const user = usersModel.findOne({id: decoded.id})
+                    console.log(user)
                     const result = {username: user.username, avatar: user.avatar} 
                     res.json({auth:true, result})
                 }

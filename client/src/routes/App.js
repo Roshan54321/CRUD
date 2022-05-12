@@ -16,10 +16,15 @@ export default function App() {
   useEffect(() => {
     dispatch(loadPersistedState())
     dispatch(authUser())
-    dispatch(getPosts())
-  }, [dispatch])
-  const state = useSelector(state => state, shallowEqual)
-  console.log(state)
+    const info = store.getState().posts
+    if(info){
+      if(!info.auth){
+        navigate('/login')
+      }else{
+        dispatch(getPosts())
+      }
+    }
+  }, [dispatch, navigate])
   return (
     <>
       <Header/>
@@ -28,5 +33,3 @@ export default function App() {
     </>
   )
 }
-
-///true vayera false vayo posts pending state ma huda

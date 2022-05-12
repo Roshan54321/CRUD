@@ -12,7 +12,10 @@ export default function Header() {
           <Nav className="me-auto">
             <Nav.Link href="/Posts">Posts</Nav.Link>
             <Nav.Link href="/Chats">Chats</Nav.Link>
-            <Nav.Link href="/login">Log Out</Nav.Link>
+            <Nav.Link href="/login" onClick={() => {
+              localStorage.removeItem("token")
+              localStorage.removeItem("state")
+            }}>Log Out</Nav.Link>
           </Nav>
         </Navbar.Collapse>
         </Container>
