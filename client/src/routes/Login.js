@@ -27,7 +27,6 @@ export default function App() {
         const user = { username: document.getElementById('Username').value, password: document.getElementById('Password').value, avatar: "" }
         const data = loginUser(user)
         data.then((res) => {
-            console.log(res)
             if(res.auth){
                 localStorage.setItem("state", JSON.stringify({...store.getState(), auth: true, username: res.result.username, avatar: res.result.avatar}))
                 localStorage.setItem("token", res.token)

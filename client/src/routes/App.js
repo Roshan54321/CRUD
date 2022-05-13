@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Posts from '../components/Posts/Posts'
 import Createpost from '../components/Posts/Createpost'
@@ -8,11 +8,12 @@ import { authUser } from '../api/accountapi'
 import { useNavigate } from 'react-router-dom'
 import { loadPersistedState } from '../features/postsSlice'
 import { store } from '../app/store'
-import "./App.css"
 
 export default function App() {
+  const [style, setStyle] = useState({})
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  
   useEffect(() => {
     dispatch(loadPersistedState())
     dispatch(authUser())
@@ -23,11 +24,19 @@ export default function App() {
       }}
     dispatch(getPosts())
   }, [dispatch, navigate])
+
+  const handleMode = (mode) => {
+    if(mode){
+      setStyle({backgroundColor:"#002221"})
+    }else{
+      setStyle({backgroundColor:"white"})
+    }
+  }
   return (
-    <>
-      <Header/>
+    <div style={style}>
+      <Header setDarkMode={handleMode}/>
       <Createpost/>
       <Posts/>
-    </>
+    </div>
   )
 }

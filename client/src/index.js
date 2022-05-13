@@ -10,6 +10,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import { Provider } from 'react-redux'
 import { store } from './app/store'
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import "./index.css"
 
 const root = createRoot(document.getElementById('root'))
 root.render(

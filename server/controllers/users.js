@@ -53,7 +53,6 @@ const authUser = (req, res) => {
                     res.json({auth:false, message:"Token is expired"})
                 }else{
                     const user = usersModel.findOne({id: decoded.id})
-                    console.log(user)
                     const result = {username: user.username, avatar: user.avatar} 
                     res.json({auth:true, result})
                 }

@@ -10,8 +10,6 @@ import { deletePost } from '../../api/postsapi'
 export default function Post(props){
     const [post, setPost] = useState(props.post)
     const dispatch = useDispatch()
-    useEffect(() => {
-    })
     const likeButton = () => {
         const likeButtonElement = document.getElementById('likeButtonElement')
         if(!likeButtonElement.disabled)

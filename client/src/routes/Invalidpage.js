@@ -1,9 +1,11 @@
 import React from 'react'
 import { Accordion, Button } from 'react-bootstrap'
+import Header from '../components/Header'
 
 export default function InvalidPage() {
     return (
-        <div >
+        <div>
+            <Header/>
             <Accordion >
                 <Accordion.Item>
                     <Accordion.Header>This site can't be reached</Accordion.Header>
