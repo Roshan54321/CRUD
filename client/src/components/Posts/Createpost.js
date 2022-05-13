@@ -22,8 +22,9 @@ export default function Post(){
         loves: 0,
         createdAt: new Date().toISOString().slice(0,10)
     })
-
-    post.current = {...post.current, creator: info.username, avatar: info.avatar}
+    if(info.user){
+        post.current = {...post.current, creator: info.user.username, avatar: info.user.avatar}
+    }
 
     creator = creator.charAt(0).toUpperCase() + creator.slice(1)
     const creatorAvatar = creator.slice(0, 1)
@@ -84,15 +85,16 @@ export default function Post(){
                 </Card.Header>
                 <Navbar variant="light" expand="lg">
                     <Container fluid>
-                        <Navbar.Brand className="text-primary fs-6">What kind of post you want to add?</Navbar.Brand>
+                        <span className="text-primary fs-6">What kind of post you want to add?</span>
                         <Navbar.Toggle aria-controls="navbar-dark-example" />
                         <Navbar.Collapse id="navbar-dark-example">
                             <Card.Body>
                                 <Form.Group className="mb-3" controlId="title">
-                                    <Form.Control type="text" placeholder="Title"/>
+                                    <Form.Control type="text" placeholder="Title" style={{width:"100%"}}/>
                                 </Form.Group>
-
-                                {image?<img style={{width:"100%", height:"100%"}} alt = "" src = {image}></img>:null}
+                                <Form.Group className="mb-3">
+                                    {image?<img style={{width:"100%", height:"100%"}} alt = "" src = {image}></img>:null}
+                                </Form.Group>
                                 
                                 <Navbar variant="light" expand="lg">
                                 <Container fluid>

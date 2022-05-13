@@ -28,9 +28,9 @@ export default function App() {
         const data = loginUser(user)
         data.then((res) => {
             if(res.auth){
-                localStorage.setItem("state", JSON.stringify({...store.getState(), auth: true, username: res.result.username, avatar: res.result.avatar}))
+                localStorage.setItem("state", JSON.stringify({auth: true}))
                 localStorage.setItem("token", res.token)
-                dispatch(changeAuth({auth: true}))
+                dispatch(changeAuth({auth: true, username: res.result.username, avatar: res.result.avatar}))
                 navigate('/')
             }
             setWarning(res.message)

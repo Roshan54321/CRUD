@@ -13,7 +13,7 @@ export default function App() {
   const [style, setStyle] = useState({})
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  
+
   useEffect(() => {
     dispatch(loadPersistedState())
     dispatch(authUser())
@@ -24,7 +24,6 @@ export default function App() {
       }}
     dispatch(getPosts())
   }, [dispatch, navigate])
-
   const handleMode = (mode) => {
     if(mode){
       setStyle({backgroundColor:"#002221"})

@@ -22,7 +22,7 @@ export const postsSlice = createSlice({
         },
         changeAuth: async (state, action) => {
             try{
-                state.auth = action.payload.auth   
+                return {...state, auth: action.payload.auth, user:{...state.user, username: action.payload.username, avatar: action.payload.avatar}}
             }catch(e){
                 console.error(e)
             }
@@ -40,7 +40,6 @@ export const postsSlice = createSlice({
     extraReducers: (builder) => {
         builder
            .addCase(postsapi.getPosts.fulfilled, (state, action) => {
-                localStorage.setItem("state", JSON.stringify({...state, data: action.payload, status: "success"}))
                 return({...state, data: action.payload, status: "success"})  
             })
             
@@ -54,7 +53,6 @@ export const postsSlice = createSlice({
             })
             
             .addCase(postsapi.createPost.fulfilled, (state, action) => {
-                localStorage.setItem("state", JSON.stringify({...state, data:[...state.data, action.payload], status: "success"}))
                 return({...state, data: [...state.data, action.payload], status: "success"})  
             })
             
@@ -72,6 +70,7 @@ export const postsSlice = createSlice({
                 
             .addCase(accountapi.authUser.fulfilled, (state, action) => {
                 if(action.payload.auth){
+                    localStorage.setItem("state", JSON.stringify({auth: true}))
                     return {...state, auth: true,
                         user: {...state.user, username:action.payload.result.username, avatar:action.payload.result.avatar}}
                 }else{

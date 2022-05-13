@@ -52,9 +52,12 @@ const authUser = (req, res) => {
                 if(e){
                     res.json({auth:false, message:"Token is expired"})
                 }else{
-                    const user = usersModel.findOne({id: decoded.id})
-                    const result = {username: user.username, avatar: user.avatar} 
-                    res.json({auth:true, result})
+                    usersModel.findOne({id: decoded.id}, (e, user) => {
+                        if(!e){
+                            const result = {username: user.username, avatar: user.avatar} 
+                            res.json({auth:true, result})
+                        }
+                    })
                 }
             })
         }else{
