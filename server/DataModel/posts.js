@@ -8,6 +8,7 @@ const post = new Schema({
     avatar: String,
     creator: String,
     file: String,
+    replies: Array,
     likes:{
         type: Number,
         default: 0

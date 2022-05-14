@@ -29,10 +29,9 @@ const deletePost = async (req, res) => {
 }
 
 const updatePost = async (req, res) => {   
-    const updatedPost = new postModel(req.body)
     try{
-        const post = await postModel.updateOne({ id: req.params.id }, updatedPost)
-        res.status(204).json(updatedPost)
+        const post = await postModel.findOneAndReplace({ username: req.body.username }, req.body)
+        res.status(204).json(post)
     } catch(err){
         res.status(409).json({ message: err.message })
     }

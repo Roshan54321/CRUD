@@ -1,10 +1,15 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Post from './Post'
 import Loading from './Loading'
-import { useSelector, useDispatch, shallowEqual } from 'react-redux'
+import { useSelector, shallowEqual } from 'react-redux'
 
 export default function Posts() {
-  const { data : posts, status : state, username, avatar } = useSelector(state => state.posts, shallowEqual)
+  const { data : posts, status : state, user } = useSelector(state => state.posts, shallowEqual)
+  let username, avatar
+  if(typeof user !== typeof undefined){
+    username = user.username
+    avatar = user.avatar
+  }
   return (
     <>
         {posts? posts.map(post => (

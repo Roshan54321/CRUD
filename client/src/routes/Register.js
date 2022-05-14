@@ -43,7 +43,7 @@ export default function App() {
     
     const Register = async (e) => {
         e.preventDefault()
-        const user = { username: document.getElementById('Username').value, password: document.getElementById('Password').value, avatar: avatar }
+        const user = { id: (Date.now() + '' + Math.random()), username: document.getElementById('Username').value, password: document.getElementById('Password').value, avatar: avatar }
         const data = registerUser(user)
         data.then((res) => {
             if (res.status === "success") {

@@ -13,13 +13,6 @@ export const postsSlice = createSlice({
     name: 'posts',
     initialState,
     reducers: {
-        updatePost: async (state, action) => {
-            try{
-                return state.data.map(post => post._id===action.payload._id? post=action.payload:post)
-            }catch(e){
-                console.error(e)
-            }       
-        },
         changeAuth: async (state, action) => {
             try{
                 return {...state, auth: action.payload.auth, user:{...state.user, username: action.payload.username, avatar: action.payload.avatar}}
@@ -66,6 +59,10 @@ export const postsSlice = createSlice({
             
             .addCase(postsapi.deletePost.rejected, (state, action) => {
                 state.status = "failed"
+           })
+
+            .addCase(postsapi.updatePost.fulfilled, (state, action) => {
+                return({...state, data:[...state.data.filter(post=>post.creator!==action.payload.creator), action.payload]})
            })
                 
             .addCase(accountapi.authUser.fulfilled, (state, action) => {

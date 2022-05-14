@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { Avatar } from '@material-ui/core'
 import like from '../../assets/like.png'
 import love from '../../assets/love.png'
-import { Badge, Tooltip, OverlayTrigger, Card, InputGroup, FormControl, Form, Button, CloseButton, Dropdown, DropdownButton, Collapse, Stack } from 'react-bootstrap'
+import { Badge, Tooltip, OverlayTrigger, Card, InputGroup, FormControl, Form, Button, CloseButton, Collapse, Stack } from 'react-bootstrap'
 import { IconButton } from '@material-ui/core'
 import { useDispatch } from 'react-redux'
-import { deletePost } from '../../api/postsapi'
+import { deletePost, updatePost } from '../../api/postsapi'
 
 export default function Post(props) {
     const [open, setOpen] = useState(false)
@@ -16,27 +16,30 @@ export default function Post(props) {
         if (!likeButtonElement.disabled) {
             likeButtonElement.disabled = true
             likeButtonElement.disabledRipple = true
-            setPost({ ...post, likes: post.likes + 1 })
-        }
-        else {
+            dispatch(updatePost({ ...post, likes:post.likes+1 }))
+            setPost({ ...post, likes: post.likes+1 })
+        }else {
             likeButtonElement.disabled = false
             likeButtonElement.disabledRipple = false
-            setPost({ ...post, likes: post.likes - 1 })
-
+            dispatch(updatePost({ ...post, likes:post.likes-1 }))
+            setPost({ ...post, likes: post.likes-1 })
+            
         }
     }
-
+    
     const loveButton = () => {
         const loveButtonElement = document.getElementById('loveButtonElement')
         if (!loveButtonElement.disabled) {
             loveButtonElement.disabled = true
             loveButtonElement.disabledRipple = true
-            setPost({ ...post, loves: post.loves + 1 })
+            dispatch(updatePost({ ...post, loves:post.loves+1 }))
+            setPost({ ...post, loves: post.loves+1 })
         }
         else {
             loveButtonElement.disabled = false
             loveButtonElement.disabledRipple = false
-            setPost({ ...post, loves: post.loves - 1 })
+            dispatch(updatePost({ ...post, loves:post.loves-1 }))
+            setPost({ ...post, loves: post.loves-1 })
         }
     }
 
@@ -55,6 +58,16 @@ export default function Post(props) {
         creator = post.creator.toUpperCase().slice(0, 1) + post.creator.slice(1)
         creatorAvatar = creator.slice(0, 1)
     }
+
+    useEffect(() => {
+        const comment = document.getElementById('comment')
+        const Post = document.getElementById('post')
+        Post.addEventListener('submit', async (e) => {
+            e.preventDefault()
+            dispatch(updatePost({ ...post, replies: [...post.replies, { creator: props.username, avatar: props.avatar, reply: comment.value }] }))
+            setPost({ ...post, replies: [...post.replies, { creator: props.username, avatar: props.avatar, reply: comment.value }] })
+        })
+    })
     return (
         <div>
             <Card style={{ margin: '1rem', width: '30rem' }}>
@@ -88,34 +101,38 @@ export default function Post(props) {
                         <div><IconButton id='likeButtonElement' onClick={likeButton}><img alt='' style={{ height: '2rem' }} src={like}></img></IconButton>{post.likes}</div>
                         <div><IconButton id='loveButtonElement' onClick={loveButton}><img alt='' style={{ height: '2rem' }} src={love}></img></IconButton>{post.loves}</div>
                     </div>
-                        <Button onClick={()=>setOpen(!open)} aria-controls="comment" aria-expanded={open} className='w-100 mb-2 btn-sm' variant="secondary">
-                            Comments <Badge bg="secondary">9</Badge>
-                            <span className="visually-hidden">unread messages</span>
-                        </Button>
-                        <Collapse in={open}>
-                            <Stack gap={2} id="text" className='border mb-2'>
-                                <div style={{backgroundColor:"white", padding:"0.5rem"}}>
-                                    <div  style={{display:"flex", gap:"0.5rem", alignItems:"center"}}>
-                                        <Avatar alt='' src = "">A</Avatar>
-                                            <span style={{fontWeight:"500"}}>Roshan</span>
-                                    </div>
-                                    <div style={{marginLeft:"3rem", color:"blue"}}>sdsdf</div>
-                                </div>
-                            </Stack>
-                        </Collapse>
 
-                    <Form>
+                    <Button onClick={() => setOpen(!open)} aria-controls="text" aria-expanded={open} className='w-100 mb-2 btn-sm' variant="secondary">
+                        Comments <Badge bg="secondary">{post.replies.length}</Badge>
+                        <span className="visually-hidden">unread messages</span>
+                    </Button>
+
+                    <Collapse in={open}>
+                        <Stack gap={2} id="text" className='border mb-2'>
+                            {post.replies ? post.replies.map((reply) => {return(
+                                <div key={Math.random(Date.now())} style={{ backgroundColor: "white", padding: "0.5rem" }}>
+                                    <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                                        <Avatar alt='' src={reply.avatar}>A</Avatar>
+                                        <span style={{ fontWeight: "500" }}>{reply.creator}</span>
+                                    </div>
+                                    <div style={{ marginLeft: "3rem", color: "blue" }}>{reply.reply}</div>
+                                </div>
+                            )}) : null}
+                        </Stack>
+                    </Collapse>
+
+                    <Form id="post">
                         <InputGroup>
                             <InputGroup.Text>Comment</InputGroup.Text>
                             <FormControl id="comment" as="textarea" aria-label="Comment" onChange={() => {
                                 if (document.getElementById('comment').value) {
-                                    document.getElementById('post').disabled = false
+                                    document.getElementById('commentButton').disabled = false
                                 } else {
-                                    document.getElementById('post').disabled = true
+                                    document.getElementById('commentButton').disabled = true
                                 }
                             }
                             } />
-                            <Button type='submit' id="post" disabled>Send</Button>
+                            <Button type='submit' id="commentButton" disabled>Send</Button>
                         </InputGroup>
                     </Form>
 
@@ -130,3 +147,6 @@ export default function Post(props) {
         </div>
     )
 }
+
+
+//post ma comment add garda lyang vaxa

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Avatar } from '@material-ui/core'
 import { Navbar, Container, Card, InputGroup, FormControl, Form, Button } from 'react-bootstrap'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
-import { store } from '../../app/store'
+// import { store } from '../../app/store'
 import { createPost } from '../../api/postsapi'
 
 export default function Post(){

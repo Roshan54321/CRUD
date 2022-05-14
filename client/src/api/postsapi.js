@@ -22,9 +22,10 @@ export const getPosts = createAsyncThunk('getPosts', async (thunkAPI) => {
     }
 })
     
-export const updatePost = async (post) => {
-    await axios.put(url+"/", post)
-}
+export const updatePost = createAsyncThunk ('updatePost', async(post, thunkAPI) => {
+    await axios.put(url, post)
+    return post
+})
     
 export const deletePost = createAsyncThunk('deletePost', async (post, thunkAPI) => {
     try {

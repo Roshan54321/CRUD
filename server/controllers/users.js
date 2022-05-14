@@ -5,6 +5,7 @@ const dotenv = require('dotenv').config()
 
 const addUser = async (req, res) => {
     let newUser = req.body
+    console.log(newUser)
     const user = await usersModel.findOne({username : newUser.username})
     try{
         if(user)
@@ -53,8 +54,10 @@ const authUser = (req, res) => {
                     res.json({auth:false, message:"Token is expired"})
                 }else{
                     usersModel.findOne({id: decoded.id}, (e, user) => {
-                        if(!e){
-                            const result = {username: user.username, avatar: user.avatar} 
+                        if(e){
+                            res.json({auth:false, message:"You failed to authenticate"})
+                        }else{
+                            result={username: user.username, avatar: user.avatar}
                             res.json({auth:true, result})
                         }
                     })

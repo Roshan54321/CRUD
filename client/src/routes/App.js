@@ -18,7 +18,7 @@ export default function App() {
     dispatch(loadPersistedState())
     dispatch(authUser())
     const info = store.getState().posts
-    if(info){
+    if(typeof info !== typeof undefined){
       if(!info.auth){
         navigate('/login')
       }}
