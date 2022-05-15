@@ -1,13 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Avatar } from '@material-ui/core'
 import { Navbar, Container, Card, InputGroup, FormControl, Form, Button } from 'react-bootstrap'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import { useDispatch } from 'react-redux'
 // import { store } from '../../app/store'
 import { createPost } from '../../api/postsapi'
+import moment from 'moment'
 
 export default function Post(){
     const dispatch = useDispatch()
-    const info = useSelector(state => state.posts, shallowEqual)
+    // const info = useSelector(state => state.posts, shallowEqual)
+    // console.log(info)
+    const user = JSON.parse(localStorage.getItem("user"))
     const [image, setImage] = useState("")
     let creator = ""
     const post = useRef({
@@ -20,14 +23,15 @@ export default function Post(){
         replies: [],
         likes: 0,
         loves: 0,
-        createdAt: new Date().toISOString().slice(0,10)
+        createdAt: moment().format()
     })
-    if(info.user){
-        post.current = {...post.current, creator: info.user.username, avatar: info.user.avatar}
+    if(user){
+        post.current = {...post.current, creator: user.username, avatar: user.avatar}
     }
-
-    creator = creator.charAt(0).toUpperCase() + creator.slice(1)
-    const creatorAvatar = creator.slice(0, 1)
+    let creatorAvatar
+    if(creator){
+        creatorAvatar = creator.slice(0, 1)
+    }
 
     
     useEffect(() => {
@@ -49,10 +53,10 @@ export default function Post(){
             
             post.current = {...post.current,
                 title: titleElement.value,
-                createdAt: new Date().toISOString().slice(0,10),
+                createdAt: moment().format(),
                 message: messageElement.value, 
                 file: postImage,
-                id: Date.now() + '' + Math.random(),
+                id: Math.random(Date.now()),
             }
             dispatch(createPost(post.current))
             setImage("")

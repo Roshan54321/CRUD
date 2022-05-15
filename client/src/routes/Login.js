@@ -3,21 +3,21 @@ import { Form, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { loginUser, authUser } from '../api/accountapi'
-import { changeAuth } from '../features/postsSlice'
-import { store } from '../app/store'
-import { loadPersistedState } from '../features/postsSlice'
+import { loginUser } from '../api/accountapi'
+// import { changeAuth } from '../features/postsSlice'
+// import { store } from '../app/store'
+// import { loadPersistedState } from '../features/postsSlice'
 
 export default function App() {
     const [warning, setWarning] = useState("")
     const dispatch = useDispatch()
     const navigate = useNavigate()
     useEffect(() => {
-        dispatch(loadPersistedState())
-        dispatch(authUser())
-        const info = store.getState().posts
-        if(info){
-            if(info.auth){
+        // dispatch(loadPersistedState())
+        // const info = store.getState().posts
+        const auth = JSON.parse(localStorage.getItem("auth"))
+        if(auth !== null){
+            if(auth.auth){
                 navigate('/')
             }
         }
@@ -28,10 +28,13 @@ export default function App() {
         const data = loginUser(user)
         data.then((res) => {
             if(res.auth){
-                localStorage.setItem("state", JSON.stringify({auth: true}))
+                localStorage.setItem("auth", JSON.stringify({auth: true}))
                 localStorage.setItem("token", res.token)
-                dispatch(changeAuth({auth: true, username: res.result.username, avatar: res.result.avatar}))
+                localStorage.setItem("user", JSON.stringify({username: res.result.username, avatar: res.result.avatar}))
+                // dispatch(changeAuth({auth: true, username: res.result.username, avatar: res.result.avatar}))
                 navigate('/')
+            }else{
+                localStorage.setItem("auth", JSON.stringify({auth: false}))
             }
             setWarning(res.message)
         })

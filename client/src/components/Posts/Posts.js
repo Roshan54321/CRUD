@@ -4,19 +4,21 @@ import Loading from './Loading'
 import { useSelector, shallowEqual } from 'react-redux'
 
 export default function Posts() {
-  const { data : posts, status : state, user } = useSelector(state => state.posts, shallowEqual)
-  let username, avatar
-  if(typeof user !== typeof undefined){
+  const { data : posts, status : state } = useSelector(state => state.posts, shallowEqual)
+  const user = JSON.parse(localStorage.getItem("user"))
+  let username
+  let avatar
+  if(user){
     username = user.username
     avatar = user.avatar
   }
   return (
     <>
-        {posts? posts.map(post => (
-        <React.Fragment  key={Math.random(Date.now())}>
-          <Post post = {post} username = {username} avatar = {avatar}/>
-        </React.Fragment>
-        )):null}
+        {posts?  React.Children.toArray(posts.map(post => (
+          <div>
+            <Post post = {post} username = {username} avatar = {avatar}/>
+          </div>
+        ))):null}
 
         {(posts && state==="loading")? 
         <React.Fragment  key={Math.random(Date.now())}>

@@ -30,7 +30,7 @@ const deletePost = async (req, res) => {
 
 const updatePost = async (req, res) => {   
     try{
-        const post = await postModel.findOneAndReplace({ username: req.body.username }, req.body)
+        const post = await postModel.findOneAndReplace({ id: req.body.id }, req.body)
         res.status(204).json(post)
     } catch(err){
         res.status(409).json({ message: err.message })

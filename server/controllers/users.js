@@ -45,7 +45,7 @@ const loginUser = async (req, res) => {
     }
 }
 
-const authUser = (req, res) => {
+const authUser = (req, res, next) => {
     const token = req.headers["x-access-token"]
     try{
         if(token){
@@ -58,7 +58,8 @@ const authUser = (req, res) => {
                             res.json({auth:false, message:"You failed to authenticate"})
                         }else{
                             result={username: user.username, avatar: user.avatar}
-                            res.json({auth:true, result})
+                            next()
+                            // res.json({auth:true, result})
                         }
                     })
                 }

@@ -1,11 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { data } from 'autoprefixer'
 import * as postsapi from '../api/postsapi'
-import * as accountapi from '../api/accountapi'
+// import * as accountapi from '../api/accountapi'
 
 const initialState = {
     data : [],
-    auth : false,
-    user : {username:"", avatar:"", message:""},
     status : ""
 }
 
@@ -13,22 +12,22 @@ export const postsSlice = createSlice({
     name: 'posts',
     initialState,
     reducers: {
-        changeAuth: async (state, action) => {
-            try{
-                return {...state, auth: action.payload.auth, user:{...state.user, username: action.payload.username, avatar: action.payload.avatar}}
-            }catch(e){
-                console.error(e)
-            }
-        },
-        loadPersistedState: (state, action) => {
-            try{
-                const loaded = JSON.parse(localStorage.getItem("state"))   
-                if(loaded)
-                    return loaded 
-            }catch(e){
-                console.error(e)
-            }
-        }
+        // changeAuth: async (state, action) => {
+        //     try{
+        //         return {...state, auth: action.payload.auth, user:{...state.user, username: action.payload.username, avatar: action.payload.avatar}}
+        //     }catch(e){
+        //         console.error(e)
+        //     }
+        // },
+        // loadPersistedState: (state, action) => {
+        //     try{
+        //         const loaded = JSON.parse(localStorage.getItem("state"))   
+        //         if(loaded)
+        //             return loaded 
+        //     }catch(e){
+        //         console.error(e)
+        //     }
+        // }
     },
     extraReducers: (builder) => {
         builder
@@ -62,21 +61,26 @@ export const postsSlice = createSlice({
            })
 
             .addCase(postsapi.updatePost.fulfilled, (state, action) => {
-                return({...state, data:[...state.data.filter(post=>post.creator!==action.payload.creator), action.payload]})
-           })
-                
-            .addCase(accountapi.authUser.fulfilled, (state, action) => {
-                if(action.payload.auth){
-                    localStorage.setItem("state", JSON.stringify({auth: true}))
-                    return {...state, auth: true,
-                        user: {...state.user, username:action.payload.result.username, avatar:action.payload.result.avatar}}
-                }else{
-                    localStorage.removeItem("state")
-                    localStorage.removeItem("token")
-                    return {...state, auth: false,
-                        user: {...state.user, message:action.payload.message}}
+                if(typeof action.payload !== typeof undefined){
+                    return({...state, data:[...state.data.filter(post=>post.id!==action.payload.id), action.payload]})
+                    // const post = state.data.filter(post => post.id!==action.payload.id)
+                    // state.data = [...data, action.payload]
+                    // return sta
                 }
            })
+                
+        //     .addCase(accountapi.authUser.fulfilled, (state, action) => {
+        //         if(action.payload.auth){
+        //             localStorage.setItem("state", JSON.stringify({auth: true}))
+        //             return {...state, auth: true,
+        //                 user: {...state.user, username:action.payload.result.username, avatar:action.payload.result.avatar}}
+        //         }else{
+        //             localStorage.removeItem("state")
+        //             localStorage.removeItem("token")
+        //             return {...state, auth: false,
+        //                 user: {...state.user, message:action.payload.message}}
+        //         }
+        //    })
      }
 })
 

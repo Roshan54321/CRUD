@@ -16,7 +16,8 @@ export default function Header(props) {
             <Nav.Link href="/Chats">Chats</Nav.Link>
             <Nav.Link href="/login" onClick={() => {
               localStorage.removeItem("token")
-              localStorage.removeItem("state")
+              localStorage.removeItem("auth")
+              localStorage.removeItem("user")
             }}>Log Out</Nav.Link>
             <Button id="darkMode" onClick={() => {
               if(mode.mode){
