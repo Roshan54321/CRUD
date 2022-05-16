@@ -13,6 +13,7 @@ export default function Post(props) {
     const loveButtonElement = useRef(null)
     const comment = useRef(null)
     const commentButton = useRef(null)
+    const image = useRef(null)
     const form = useRef(null)
     const [open, setOpen] = useState(false)
     const [post, setPost] = useState(props.post)
@@ -63,12 +64,25 @@ export default function Post(props) {
     )
     let creatorAvatar = ""
     let creator = ""
-    if (typeof post.creator!==typeof undefined) {
+    if (typeof post!==typeof undefined) {
         creator = post.creator
         creatorAvatar = creator.slice(0, 1)
     }
 
+    
     useEffect(() => {
+    image.current.addEventListener("mouseover", e => {
+            console.log("...")
+            e.target.style.cursor = "pointer"
+            e.target.style.transform = "translate(5%, -15%)"
+            e.target.style.height = "110%"
+            e.target.style.width = "110%"
+        })
+    image.current.addEventListener("mouseout", e => {
+            e.target.style.transform = ""
+            e.target.style.height = "100%"
+            e.target.style.width = "100%"
+        })
         form.current.addEventListener('submit', event => {
             event.preventDefault()
             dispatch(updatePost({ ...post, replies: [...post.replies, { creator: props.username, avatar: props.avatar, reply: comment.current.value }] }))
@@ -94,8 +108,8 @@ export default function Post(props) {
                         {post.title ? <Card.Title className="text-center mt-1 fs-6">{post.title}</Card.Title> : null}
                     </Card.Header>
                     {post.file ?
-                        <Card.Body>
-                            <img alt='' style={{ width: "100%", height: "100%" }} src={post.file}></img>
+                        <Card.Body style={{ maxWidth: "100%", height: "100%" }}>
+                            <img style={{ width: "100%", height: "100%" }} ref={image} alt='' src={post.file}></img>
                         </Card.Body>
                         : null
                     }

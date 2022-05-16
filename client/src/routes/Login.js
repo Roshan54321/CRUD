@@ -31,8 +31,8 @@ export default function App() {
                 navigate('/')
             }else{
                 localStorage.setItem("auth", JSON.stringify({auth: false}))
+                setWarning(res.message)
             }
-            setWarning(res.message)
         })
         document.getElementById('login').reset()
         document.getElementById('loginButton').disabled = true
