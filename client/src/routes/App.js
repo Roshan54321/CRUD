@@ -17,7 +17,7 @@ export default function App() {
     const localAuth = JSON.parse(localStorage.getItem("auth"))
     dispatch(getPosts())
     dispatch(loadPersistedState())
-    if( auth==localAuth.auth && !auth ){
+    if( auth === localAuth.auth && !auth ){
         localStorage.removeItem("token")
         localStorage.removeItem("auth")
         localStorage.removeItem("user")
