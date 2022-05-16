@@ -2,14 +2,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Avatar } from '@material-ui/core'
 import { Navbar, Container, Card, InputGroup, FormControl, Form, Button } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
-// import { store } from '../../app/store'
 import { createPost } from '../../api/postsapi'
 import moment from 'moment'
 
 export default function Post(){
     const dispatch = useDispatch()
-    // const info = useSelector(state => state.posts, shallowEqual)
-    // console.log(info)
     const user = JSON.parse(localStorage.getItem("user"))
     const [image, setImage] = useState("")
     let creator = ""
@@ -30,6 +27,7 @@ export default function Post(){
     }
     let creatorAvatar
     if(creator){
+        creator = user.username
         creatorAvatar = creator.slice(0, 1)
     }
 

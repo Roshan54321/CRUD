@@ -4,19 +4,15 @@ import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { loginUser } from '../api/accountapi'
-// import { changeAuth } from '../features/postsSlice'
-// import { store } from '../app/store'
-// import { loadPersistedState } from '../features/postsSlice'
+import { changeAuth } from '../features/postsSlice'
 
 export default function App() {
     const [warning, setWarning] = useState("")
     const dispatch = useDispatch()
     const navigate = useNavigate()
     useEffect(() => {
-        // dispatch(loadPersistedState())
-        // const info = store.getState().posts
         const auth = JSON.parse(localStorage.getItem("auth"))
-        if(auth !== null){
+        if(auth){
             if(auth.auth){
                 navigate('/')
             }
@@ -31,7 +27,7 @@ export default function App() {
                 localStorage.setItem("auth", JSON.stringify({auth: true}))
                 localStorage.setItem("token", res.token)
                 localStorage.setItem("user", JSON.stringify({username: res.result.username, avatar: res.result.avatar}))
-                // dispatch(changeAuth({auth: true, username: res.result.username, avatar: res.result.avatar}))
+                dispatch(changeAuth({auth: true}))
                 navigate('/')
             }else{
                 localStorage.setItem("auth", JSON.stringify({auth: false}))

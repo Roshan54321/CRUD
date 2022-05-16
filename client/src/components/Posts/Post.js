@@ -29,7 +29,6 @@ export default function Post(props) {
             likeButtonElement.current.disabledRipple = true
             dispatch(updatePost({ ...post, likes: post.likes + 1 }))
             setPost({ ...post, likes: post.likes + 1 })
-            console.log(post)
         } else {
             likeButtonElement.current.disabled = false
             likeButtonElement.current.disabledRipple = false
@@ -70,13 +69,14 @@ export default function Post(props) {
     }
 
     useEffect(() => {
-        form.current.addEventListener('submit', async (e) => {
-            e.preventDefault()
+        form.current.addEventListener('submit', event => {
+            event.preventDefault()
             dispatch(updatePost({ ...post, replies: [...post.replies, { creator: props.username, avatar: props.avatar, reply: comment.current.value }] }))
             setPost({ ...post, replies: [...post.replies, { creator: props.username, avatar: props.avatar, reply: comment.current.value }] })
             form.current.reset()
         })
     }, [])
+    
     return (
         <div>
                 <Card style={{ margin: '1rem', width: '30rem' }}>

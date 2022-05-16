@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { registerUser } from '../api/accountapi'
 import { useDispatch } from 'react-redux'
-// import { loadPersistedState } from '../features/postsSlice'
-// import { store } from '../app/store'
 import { Avatar } from '@material-ui/core'
 
 export default function App() {
@@ -14,7 +12,6 @@ export default function App() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     useEffect(() => {
-        // dispatch(loadPersistedState())
         const auth = JSON.parse(localStorage.getItem("auth"))
         console.log(auth)
         if(auth !== null){

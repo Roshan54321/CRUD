@@ -1,34 +1,29 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Posts from '../components/Posts/Posts'
 import Createpost from '../components/Posts/Createpost'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { getPosts } from '../api/postsapi'
-// import { authUser } from '../api/accountapi'
 import { useNavigate } from 'react-router-dom'
-// import { loadPersistedState } from '../features/postsSlice'
-// import { store } from '../app/store'
+import { loadPersistedState } from '../features/postsSlice'
 
 export default function App() {
   const [style, setStyle] = useState({})
   const navigate = useNavigate()
   const dispatch = useDispatch()
   
+  const auth = useSelector(state => state.posts.auth, shallowEqual)
   useEffect(() => {
-    // dispatch(loadPersistedState())
-    // const info = store.getState().posts
-    // console.log(info)
+    const localAuth = JSON.parse(localStorage.getItem("auth"))
     dispatch(getPosts())
-    const auth = JSON.parse(localStorage.getItem("auth"))
-    if(auth){
-      if(!auth.auth){
+    dispatch(loadPersistedState())
+    if( auth==localAuth.auth && !auth ){
         localStorage.removeItem("token")
         localStorage.removeItem("auth")
         localStorage.removeItem("user")
         navigate("/login")
-      }
     }
-  }, [dispatch, navigate])
+  }, [dispatch, navigate, auth])
   const handleMode = (mode) => {
     if(mode){
       setStyle({backgroundColor:"#002221"})

@@ -10,18 +10,7 @@ export const getPosts = createAsyncThunk('getPosts', async (thunkAPI) => {
                 "x-access-token": token
             }
         })
-        if (typeof data !== typeof undefined) {
-            if (typeof data.auth !== typeof undefined) {
-                if (!data.auth) {
-                    localStorage.setItem("auth", JSON.stringify({ auth: false }))
-                    return
-                } else {
-                    return data
-                }
-            } else {
-                return data
-            }
-        }
+        return data
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
         return thunkAPI.rejectWithValue(message);
