@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { registerUser } from '../api/accountapi'
 import { useDispatch } from 'react-redux'
-import { Avatar } from '@material-ui/core'
+import { Avatar } from '@mui/material'
 
 export default function App() {
     const [avatar, setAvatar] = useState("")

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Avatar } from '@material-ui/core'
+import { Avatar } from '@mui/material'
 import { Navbar, Container, Card, InputGroup, FormControl, Form, Button } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { createPost } from '../../api/postsapi'

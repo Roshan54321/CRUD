@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Navbar, Container, Nav, Button } from 'react-bootstrap'
+import {Link} from 'react-router-dom'
 
 export default function Header(props) {
   const localMode = JSON.parse(localStorage.getItem("mode"))
   const [mode, setMode] = useState(localMode || {mode: 1, text: "Dark Mode"})
-  
   useEffect(() => {
-      props.setDarkMode(!mode.mode)
+    props.setDarkMode(!mode.mode)
   }, [])
   
   return (
@@ -17,14 +17,14 @@ export default function Header(props) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/posts">Posts</Nav.Link>
-            <Nav.Link href="/Chats">Chats</Nav.Link>
-            <Nav.Link href="/login" onClick={() => {
+            <Link style ={{margin: ".3rem", textDecoration:"none", fontSize:"1.1rem"}} to="/">Home</Link>
+            <Link style ={{margin: ".3rem", textDecoration:"none", fontSize:"1.1rem"}} to="/posts">Posts</Link>
+            <Link style ={{margin: ".3rem", textDecoration:"none", fontSize:"1.1rem"}} to="/Chats">Chats</Link>
+            <Link style ={{margin: ".3rem", textDecoration:"none", fontSize:"1.1rem"}} to="/login" onClick={() => {
               localStorage.removeItem("token")
               localStorage.removeItem("auth")
               localStorage.removeItem("user")
-            }}>Log Out</Nav.Link>
+            }}>Log Out</Link>
             <Button id="darkMode" onClick={() => {
               if(mode.mode){
                 localStorage.setItem("mode", JSON.stringify({mode: 0, text: "Light Mode"}))
