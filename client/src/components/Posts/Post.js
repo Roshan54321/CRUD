@@ -69,23 +69,25 @@ export default function Post(props) {
     }
 
     
+    if(typeof image !== typeof null){
+        image.current.addEventListener("mouseover", e => {
+                console.log("...")
+                e.target.style.cursor = "pointer"
+                e.target.style.transform = "translate(5%, -15%)"
+                e.target.style.height = "110%"
+                e.target.style.width = "110%"
+            })
+        image.current.addEventListener("mouseout", e => {
+                e.target.style.transform = ""
+                e.target.style.height = "100%"
+                e.target.style.width = "100%"
+            })
+    }
     useEffect(() => {
-    image.current.addEventListener("mouseover", e => {
-            console.log("...")
-            e.target.style.cursor = "pointer"
-            e.target.style.transform = "translate(5%, -15%)"
-            e.target.style.height = "110%"
-            e.target.style.width = "110%"
-        })
-    image.current.addEventListener("mouseout", e => {
-            e.target.style.transform = ""
-            e.target.style.height = "100%"
-            e.target.style.width = "100%"
-        })
         form.current.addEventListener('submit', event => {
             event.preventDefault()
-            dispatch(updatePost({ ...post, replies: [...post.replies, { creator: props.username, avatar: props.avatar, reply: comment.current.value }] }))
             setPost({ ...post, replies: [...post.replies, { creator: props.username, avatar: props.avatar, reply: comment.current.value }] })
+            dispatch(updatePost({ ...post, replies: [...post.replies, { creator: props.username, avatar: props.avatar, reply: comment.current.value }] }))
             form.current.reset()
         })
     }, [])
